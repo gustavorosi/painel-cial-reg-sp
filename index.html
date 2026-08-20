@@ -52,100 +52,104 @@
             background-image: radial-gradient(circle at 80% 10%, rgba(0, 40, 95, 0.6), var(--bg-dark) 70%);
         }
 
-        /* HEADER */
+        /* HEADER ULTRA-COMPACTO E TRAVADO SEM QUEBRAS */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2.5rem;
+            padding: 0.4rem 1.2rem;
+            height: 52px;
             border-bottom: 2px solid var(--gold-premium);
             background: linear-gradient(90deg, rgba(0,18,41,0.95) 0%, rgba(0,26,61,0.95) 100%);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             z-index: 20;
+            flex-shrink: 0;
         }
 
-        .brand-area { display: flex; align-items: center; gap: 15px; }
+        .brand-area { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         .brand-badge {
             background: linear-gradient(135deg, var(--gold-premium), #9A7B3E);
-            color: #000; font-weight: 900; padding: 6px 12px; border-radius: 6px; font-size: 1.1rem; letter-spacing: 1px;
+            color: #000; font-weight: 900; padding: 3px 8px; border-radius: 4px; font-size: 0.85rem; letter-spacing: 1px;
         }
-        .brand-title { font-size: 1.8rem; font-weight: 800; letter-spacing: 0.5px; }
+        .brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; }
         .brand-title span { color: var(--gold-premium); }
 
         .nav-tabs {
-            display: flex; gap: 10px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+            display: flex; gap: 6px; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap;
         }
         .tab-btn {
-            background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+            background: transparent; border: none; color: var(--text-muted); padding: 5px 10px; border-radius: 5px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; white-space: nowrap;
         }
         .tab-btn.active {
-            background: var(--gold-premium); color: #001229; box-shadow: 0 0 12px var(--gold-glow); font-weight: 800;
+            background: var(--gold-premium); color: #001229; box-shadow: 0 0 10px var(--gold-glow); font-weight: 800;
         }
 
-        .clock-container { text-align: right; }
-        .clock-time { font-size: 2rem; font-weight: 800; color: var(--cyan-neon); line-height: 1; text-shadow: 0 0 10px var(--cyan-glow); }
-        .clock-date { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+        .clock-container { text-align: right; white-space: nowrap; }
+        .clock-time { font-size: 1.2rem; font-weight: 800; color: var(--cyan-neon); line-height: 1; text-shadow: 0 0 8px var(--cyan-glow); }
+        .clock-date { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 1px; }
 
         /* MAIN DASHBOARD AREA */
-        .dashboard-body { flex: 1; position: relative; padding: 1.5rem 2.5rem; }
+        .dashboard-body { 
+            flex: 1; 
+            position: relative; 
+            padding: 0.6rem 1.2rem; 
+            height: calc(100vh - 52px); 
+            overflow: hidden; 
+        }
+
         .panel {
-            position: absolute; top: 1.5rem; left: 2.5rem; right: 2.5rem; bottom: 1.5rem; opacity: 0; transform: translateY(15px) scale(0.99); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; display: flex; flex-direction: column; gap: 1.2rem;
+            position: absolute; top: 0.6rem; left: 1.2rem; right: 1.2rem; bottom: 0.6rem; opacity: 0; transform: translateY(10px) scale(0.99); transition: all 0.4s ease; pointer-events: none; display: flex; flex-direction: column; gap: 0.6rem;
         }
         .panel.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; z-index: 10; }
 
-        /* CARDS & CONTAINERS */
-        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; }
+        /* CARDS COMPACTOS */
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem; flex-shrink: 0; }
         .kpi-card {
-            background: var(--bg-card); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: space-between; backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); position: relative; overflow: hidden;
+            background: var(--bg-card); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; padding: 0.5rem 0.8rem; display: flex; flex-direction: column; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: relative; overflow: hidden;
         }
-        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold-premium); }
+        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--gold-premium); }
         .kpi-card.cyan-accent::before { background: var(--cyan-neon); }
         .kpi-card.danger-accent::before { background: var(--danger-text); }
-        .kpi-label { font-size: 0.95rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .kpi-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px; }
         
-        .kpi-val { font-size: 2.4rem; font-weight: 900; color: var(--text-main); margin-top: 0.3rem; display: flex; align-items: baseline; gap: 8px;}
+        .kpi-val { font-size: 1.6rem; font-weight: 900; color: var(--text-main); margin-top: 0.1rem; display: flex; align-items: baseline; gap: 6px; line-height: 1.1; }
         .kpi-val.gold { color: var(--gold-premium); }
         .kpi-val.cyan { color: var(--cyan-neon); }
         .kpi-val.green { color: #4ade80; }
         .kpi-val.red { color: var(--danger-text); }
         
-        /* Ajuste de Tamanhos e Cores para Tendência e M-1 */
-        .kpi-val .tendency-val { font-size: 2.2rem; color: var(--gold-premium); }
-        .kpi-val .m1-val { font-size: 2.2rem; color: #4ade80; }
-        .kpi-val .divider { color: rgba(255,255,255,0.2); font-weight: 300; font-size: 2.2rem; margin: 0 4px; }
+        .kpi-val .tendency-val { font-size: 1.4rem; color: var(--gold-premium); }
+        .kpi-val .m1-val { font-size: 1.4rem; color: #4ade80; }
+        .kpi-val .divider { color: rgba(255,255,255,0.2); font-weight: 300; font-size: 1.4rem; margin: 0 2px; }
 
-        .kpi-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; }
+        .kpi-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; white-space: nowrap; }
 
-        /* CHARTS LAYOUT */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; flex: 1; }
+        /* CHARTS LAYOUT REDIMENSIONÁVEL */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; flex: 1; min-height: 0; }
         .full-chart-container {
-            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; flex: 1; position: relative;
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; flex-direction: column; flex: 1; position: relative; min-height: 0;
         }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .chart-title { font-size: 1.25rem; color: var(--gold-premium); font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .chart-wrapper { flex: 1; position: relative; width: 100%; min-height: 0; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; flex-shrink: 0; }
+        .chart-title { font-size: 0.9rem; color: var(--gold-premium); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .chart-wrapper { flex: 1; position: relative; width: 100%; min-height: 0; height: 100%; }
 
         /* PAINEL DIÁRIO OPTIMIZATIONS */
-        .daily-top-bar { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+        .daily-top-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; flex-shrink: 0; }
         .efficiency-balloon {
-            background: linear-gradient(135deg, rgba(0, 255, 204, 0.15), rgba(0, 26, 61, 0.9)); border: 2px solid var(--cyan-neon); border-radius: 50px; padding: 0.8rem 1.8rem; display: flex; align-items: center; gap: 15px; box-shadow: 0 0 25px var(--cyan-glow); animation: pulseGlow 3s infinite alternate;
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.15), rgba(0, 26, 61, 0.9)); border: 2px solid var(--cyan-neon); border-radius: 30px; padding: 0.4rem 1.2rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 15px var(--cyan-glow); flex-shrink: 0;
         }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
-            100% { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
-        }
-        .efficiency-balloon .icon-box { background: var(--cyan-neon); color: #001229; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .efficiency-balloon .icon-box { background: var(--cyan-neon); color: #001229; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
         .efficiency-balloon .eff-text { display: flex; flex-direction: column; }
-        .efficiency-balloon .eff-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; font-weight: 700; }
-        .efficiency-balloon .eff-value { font-size: 2.2rem; font-weight: 900; color: var(--cyan-neon); line-height: 1; }
+        .efficiency-balloon .eff-title { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-weight: 700; }
+        .efficiency-balloon .eff-value { font-size: 1.5rem; font-weight: 900; color: var(--cyan-neon); line-height: 1; }
 
         .table-card {
-            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem 1.2rem; flex: 1; display: flex; flex-direction: column; overflow: hidden;
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.4rem 0.6rem; flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;
         }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-        .data-table th, .data-table td { border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0.4rem; text-align: center; }
-        .data-table th { background: rgba(0, 0, 0, 0.6); color: var(--gold-premium); font-weight: 700; font-size: 0.9rem; }
-        .data-table td.channel-name { text-align: left; font-weight: 700; padding-left: 0.8rem; background: rgba(0, 0, 0, 0.3); color: var(--text-main); }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .data-table th, .data-table td { border: 1px solid rgba(255,255,255,0.08); padding: 0.25rem 0.2rem; text-align: center; }
+        .data-table th { background: rgba(0, 0, 0, 0.6); color: var(--gold-premium); font-weight: 700; font-size: 0.72rem; }
+        .data-table td.channel-name { text-align: left; font-weight: 700; padding-left: 0.5rem; background: rgba(0, 0, 0, 0.3); color: var(--text-main); }
         .data-table td.meta-col { background: rgba(197, 160, 89, 0.15); color: var(--gold-premium); font-weight: 800; }
 
         /* Heatmap classes */
@@ -154,21 +158,21 @@
         .cell-good { background: var(--success-bg); color: var(--success-text); font-weight: 800; }
         .cell-bad { background: var(--danger-bg); color: var(--danger-text); font-weight: 700; }
 
-        /* DESTAQUES DE LINHA (CONTORNO COMPLETO) */
-        .data-table tr.highlight-regional td { border-top: 2px solid var(--gold-premium) !important; border-bottom: 2px solid var(--gold-premium) !important; }
-        .data-table tr.highlight-regional td:first-child { border-left: 2px solid var(--gold-premium) !important; color: var(--gold-premium); font-size: 1.05rem; }
-        .data-table tr.highlight-regional td:last-child { border-right: 2px solid var(--gold-premium) !important; }
+        /* DESTAQUES DE LINHA */
+        .data-table tr.highlight-regional td { border-top: 1.5px solid var(--gold-premium) !important; border-bottom: 1.5px solid var(--gold-premium) !important; }
+        .data-table tr.highlight-regional td:first-child { border-left: 1.5px solid var(--gold-premium) !important; color: var(--gold-premium); font-size: 0.8rem; }
+        .data-table tr.highlight-regional td:last-child { border-right: 1.5px solid var(--gold-premium) !important; }
 
-        .data-table tr.highlight-presencial td { border-top: 2px solid #60A5FA !important; border-bottom: 2px solid #60A5FA !important; }
-        .data-table tr.highlight-presencial td:first-child { border-left: 2px solid #60A5FA !important; color: #60A5FA; }
-        .data-table tr.highlight-presencial td:last-child { border-right: 2px solid #60A5FA !important; }
+        .data-table tr.highlight-presencial td { border-top: 1.5px solid #60A5FA !important; border-bottom: 1.5px solid #60A5FA !important; }
+        .data-table tr.highlight-presencial td:first-child { border-left: 1.5px solid #60A5FA !important; color: #60A5FA; }
+        .data-table tr.highlight-presencial td:last-child { border-right: 1.5px solid #60A5FA !important; }
 
-        .data-table tr.highlight-remoto td { border-top: 2px solid var(--cyan-neon) !important; border-bottom: 2px solid var(--cyan-neon) !important; }
-        .data-table tr.highlight-remoto td:first-child { border-left: 2px solid var(--cyan-neon) !important; color: var(--cyan-neon); }
-        .data-table tr.highlight-remoto td:last-child { border-right: 2px solid var(--cyan-neon) !important; }
+        .data-table tr.highlight-remoto td { border-top: 1.5px solid var(--cyan-neon) !important; border-bottom: 1.5px solid var(--cyan-neon) !important; }
+        .data-table tr.highlight-remoto td:first-child { border-left: 1.5px solid var(--cyan-neon) !important; color: var(--cyan-neon); }
+        .data-table tr.highlight-remoto td:last-child { border-right: 1.5px solid var(--cyan-neon) !important; }
 
-        /* PROGRESS BAR FOR AUTO LOOP */
-        .progress-bar-container { position: fixed; bottom: 0; left: 0; right: 0; height: 5px; background: rgba(0,0,0,0.5); z-index: 100; }
+        /* PROGRESS BAR */
+        .progress-bar-container { position: fixed; bottom: 0; left: 0; right: 0; height: 4px; background: rgba(0,0,0,0.5); z-index: 100; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold-premium), var(--cyan-neon)); width: 0%; transition: width linear; }
     </style>
 </head>
@@ -182,10 +186,10 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchPanel(1)"><i class="fa-solid fa-chart-line"></i> Vendas & Altas vs. Meta</button>
+            <button class="tab-btn active" onclick="switchPanel(1)"><i class="fa-solid fa-chart-line"></i> Vendas & Altas</button>
             <button class="tab-btn" onclick="switchPanel(2)"><i class="fa-solid fa-calendar-day"></i> Acompanhamento Diário</button>
-            <button class="tab-btn" onclick="switchPanel(3)"><i class="fa-solid fa-network-wired"></i> Net Adds Histórico</button>
-            <button class="tab-btn" onclick="switchPanel(4)"><i class="fa-solid fa-user-minus"></i> Churn Histórico</button>
+            <button class="tab-btn" onclick="switchPanel(3)"><i class="fa-solid fa-network-wired"></i> Net Adds</button>
+            <button class="tab-btn" onclick="switchPanel(4)"><i class="fa-solid fa-user-minus"></i> Churn</button>
         </div>
 
         <div class="clock-container">
@@ -202,26 +206,26 @@
         <div class="panel active" id="panel-1">
             <div class="kpi-row">
                 <div class="kpi-card">
-                    <div class="kpi-label"><i class="fa-solid fa-bullseye"></i> Vendas Ago/26 (Proj) vs. Meta</div>
-                    <div class="kpi-val cyan">2.151 <span style="font-size: 1.4rem; color: #4ade80;">(+10,5%)</span></div>
+                    <div class="kpi-label"><i class="fa-solid fa-bullseye"></i> Vendas Ago/26 (Proj)</div>
+                    <div class="kpi-val cyan">2.151 <span style="font-size: 0.9rem; color: #4ade80;">(+10,5%)</span></div>
                     <div class="kpi-sub">Meta do Mês: 1.946 propostas</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label"><i class="fa-solid fa-bolt"></i> Altas Ago/26 (Proj) vs. Meta</div>
-                    <div class="kpi-val gold">1.767 <span style="font-size: 1.4rem; color: #4ade80;">(+5,6%)</span></div>
+                    <div class="kpi-label"><i class="fa-solid fa-bolt"></i> Altas Ago/26 (Proj)</div>
+                    <div class="kpi-val gold">1.767 <span style="font-size: 0.9rem; color: #4ade80;">(+5,6%)</span></div>
                     <div class="kpi-sub">Meta do Mês: 1.674 instalações</div>
                 </div>
                 <div class="kpi-card cyan-accent">
                     <div class="kpi-label"><i class="fa-solid fa-arrow-trend-up"></i> Tendência Recente</div>
-                    <div class="kpi-val green" style="font-size: 2.4rem;">5 Meses</div>
-                    <div class="kpi-sub">Consecutivos acima da meta (Abr-Ago/26)</div>
+                    <div class="kpi-val green" style="font-size: 1.6rem;">5 Meses</div>
+                    <div class="kpi-sub">Acima da meta (Abr-Ago/26)</div>
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="full-chart-container">
                     <div class="chart-header">
-                        <div class="chart-title"><i class="fa-solid fa-cart-shopping"></i> Vendas: Realizado (Linha) vs. Meta (Barra)</div>
+                        <div class="chart-title"><i class="fa-solid fa-cart-shopping"></i> Vendas: Realizado vs. Meta</div>
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="chartVendasMeta"></canvas>
@@ -230,7 +234,7 @@
 
                 <div class="full-chart-container">
                     <div class="chart-header">
-                        <div class="chart-title"><i class="fa-solid fa-truck-ramp-box"></i> Altas: Realizado (Linha) vs. Meta (Barra)</div>
+                        <div class="chart-title"><i class="fa-solid fa-truck-ramp-box"></i> Altas: Realizado vs. Meta</div>
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="chartAltasMeta"></canvas>
@@ -247,11 +251,11 @@
                 <div class="kpi-row" style="flex:1;">
                     <div class="kpi-card">
                         <div class="kpi-label">Meta Altas Ago</div>
-                        <div class="kpi-val gold" id="kpi-meta-ago" style="font-size: 2.4rem;">1.674</div>
+                        <div class="kpi-val gold">1.674</div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-label">Forecast Ago</div>
-                        <div class="kpi-val" style="font-size: 2.4rem;">1.910</div>
+                        <div class="kpi-val">1.910</div>
                     </div>
                     <div class="kpi-card cyan-accent">
                         <div class="kpi-label">Realizado / Tendência</div>
@@ -277,15 +281,15 @@
             </div>
 
             <div class="table-card">
-                <div class="chart-header" style="margin-bottom:0.4rem;">
-                    <div class="chart-title" style="font-size:1.1rem;"><i class="fa-solid fa-cart-plus"></i> Vendas Diárias por Canal (Agosto)</div>
+                <div class="chart-header" style="margin-bottom:0.2rem;">
+                    <div class="chart-title" style="font-size:0.85rem;"><i class="fa-solid fa-cart-plus"></i> Vendas Diárias por Canal (Agosto)</div>
                 </div>
                 <table class="data-table" id="tableVendasDiaria"></table>
             </div>
 
             <div class="table-card">
-                <div class="chart-header" style="margin-bottom:0.4rem;">
-                    <div class="chart-title" style="font-size:1.1rem;"><i class="fa-solid fa-plug-circle-check"></i> Altas Diárias por Canal (Agosto)</div>
+                <div class="chart-header" style="margin-bottom:0.2rem;">
+                    <div class="chart-title" style="font-size:0.85rem;"><i class="fa-solid fa-plug-circle-check"></i> Altas Diárias por Canal (Agosto)</div>
                 </div>
                 <table class="data-table" id="tableAltasDiaria"></table>
             </div>
@@ -298,17 +302,17 @@
             <div class="kpi-row">
                 <div class="kpi-card cyan-accent">
                     <div class="kpi-label"><i class="fa-solid fa-plus-minus"></i> Net Add Projetado (Ago/26)</div>
-                    <div class="kpi-val cyan" style="font-size: 2.4rem;">+ 697</div>
+                    <div class="kpi-val cyan">+ 697</div>
                     <div class="kpi-sub">Crescimento líquido positivo acelerado</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-label"><i class="fa-solid fa-trophy"></i> Melhor Desempenho</div>
-                    <div class="kpi-val green" style="font-size: 2.4rem;">+ 697 <span style="font-size:1.2rem; color:var(--text-muted); font-weight: 600;">(Ago/26)</span></div>
+                    <div class="kpi-val green">+ 697 <span style="font-size:0.9rem; color:var(--text-muted); font-weight: 600;">(Ago/26)</span></div>
                     <div class="kpi-sub">Recorde do período analisado</div>
                 </div>
                 <div class="kpi-card danger-accent">
                     <div class="kpi-label"><i class="fa-solid fa-triangle-exclamation"></i> Menor Ponto</div>
-                    <div class="kpi-val red" style="font-size: 2.4rem;">- 1.017 <span style="font-size:1.2rem; color:var(--text-muted); font-weight: 600;">(Abr/26)</span></div>
+                    <div class="kpi-val red">- 1.017 <span style="font-size:0.9rem; color:var(--text-muted); font-weight: 600;">(Abr/26)</span></div>
                     <div class="kpi-sub">Reversão total nos meses seguintes</div>
                 </div>
             </div>
@@ -330,17 +334,17 @@
             <div class="kpi-row">
                 <div class="kpi-card cyan-accent">
                     <div class="kpi-label"><i class="fa-solid fa-percent"></i> Taxa de Churn (Jul/26)</div>
-                    <div class="kpi-val green" style="font-size: 2.4rem;">1,76%</div>
+                    <div class="kpi-val green">1,76%</div>
                     <div class="kpi-sub">Menor índice histórico alcançado!</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-label"><i class="fa-solid fa-users-slash"></i> Churn Total Qtd (Jul/26)</div>
-                    <div class="kpi-val gold" style="font-size: 2.4rem;">1.068</div>
+                    <div class="kpi-val gold">1.068</div>
                     <div class="kpi-sub">Queda contínua desde Abr/26 (2.391)</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-label"><i class="fa-solid fa-calculator"></i> Média do Período</div>
-                    <div class="kpi-val" style="font-size: 2.4rem;">2,43%</div>
+                    <div class="kpi-val">2,43%</div>
                     <div class="kpi-sub">Redução expressiva na retenção</div>
                 </div>
             </div>
@@ -419,7 +423,7 @@
         Chart.register(ChartDataLabels);
         Chart.defaults.color = '#A0B0C0';
         Chart.defaults.font.family = "'Inter', sans-serif";
-        Chart.defaults.plugins.datalabels.font = { weight: 'bold', size: 12 };
+        Chart.defaults.plugins.datalabels.font = { weight: 'bold', size: 10 };
 
         // 1. GRÁFICO VENDAS
         new Chart(document.getElementById('chartVendasMeta'), {
@@ -441,23 +445,23 @@
                         label: 'Realizado/Proj Vendas',
                         data: HISTORICO_DATA.vendas.real,
                         borderColor: '#00FFCC',
-                        borderWidth: 4,
+                        borderWidth: 3,
                         tension: 0.3,
-                        pointRadius: 6,
+                        pointRadius: 4,
                         pointBackgroundColor: '#001229',
                         pointBorderColor: '#00FFCC',
                         pointBorderWidth: 2,
-                        datalabels: { align: 'end', anchor: 'end', color: '#00FFCC', font: { size: 13, weight: '900' }, formatter: (v) => v.toLocaleString('pt-BR') }
+                        datalabels: { align: 'end', anchor: 'end', color: '#00FFCC', font: { size: 11, weight: '900' }, formatter: (v) => v.toLocaleString('pt-BR') }
                     }
                 ]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                layout: { padding: { top: 40, bottom: 10 } },
-                plugins: { legend: { position: 'top', align: 'end' } },
+                layout: { padding: { top: 25, bottom: 5 } },
+                plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 10 } } } },
                 scales: { 
                     y: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
-                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600', size: 10 } } }
                 }
             }
         });
@@ -482,23 +486,23 @@
                         label: 'Realizado/Proj Altas',
                         data: HISTORICO_DATA.altas.real,
                         borderColor: '#C5A059',
-                        borderWidth: 4,
+                        borderWidth: 3,
                         tension: 0.3,
-                        pointRadius: 6,
+                        pointRadius: 4,
                         pointBackgroundColor: '#001229',
                         pointBorderColor: '#C5A059',
                         pointBorderWidth: 2,
-                        datalabels: { align: 'end', anchor: 'end', color: '#C5A059', font: { size: 13, weight: '900' }, formatter: (v) => v.toLocaleString('pt-BR') }
+                        datalabels: { align: 'end', anchor: 'end', color: '#C5A059', font: { size: 11, weight: '900' }, formatter: (v) => v.toLocaleString('pt-BR') }
                     }
                 ]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                layout: { padding: { top: 40, bottom: 10 } },
-                plugins: { legend: { position: 'top', align: 'end' } },
+                layout: { padding: { top: 25, bottom: 5 } },
+                plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 10 } } } },
                 scales: { 
                     y: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
-                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600', size: 10 } } }
                 }
             }
         });
@@ -514,7 +518,7 @@
                     backgroundColor: (ctx) => ctx.raw >= 0 ? 'rgba(0, 255, 204, 0.75)' : 'rgba(220, 53, 69, 0.75)',
                     borderColor: (ctx) => ctx.raw >= 0 ? '#00FFCC' : '#DC3545',
                     borderWidth: 1.5,
-                    borderRadius: 6,
+                    borderRadius: 4,
                     datalabels: {
                         anchor: (ctx) => ctx.raw >= 0 ? 'end' : 'start',
                         align: (ctx) => ctx.raw >= 0 ? 'top' : 'bottom',
@@ -525,11 +529,11 @@
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                layout: { padding: { top: 40, bottom: 40 } },
+                layout: { padding: { top: 25, bottom: 25 } },
                 plugins: { legend: { display: false } },
                 scales: { 
                     y: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
-                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600', size: 10 } } }
                 }
             }
         });
@@ -545,7 +549,7 @@
                         data: HISTORICO_DATA.churn.perc,
                         borderColor: '#FF5D6C',
                         borderWidth: 3,
-                        pointRadius: 5,
+                        pointRadius: 4,
                         pointBackgroundColor: '#001229',
                         pointBorderColor: '#FF5D6C',
                         pointBorderWidth: 2,
@@ -559,7 +563,7 @@
                         backgroundColor: 'rgba(197, 160, 89, 0.4)',
                         borderColor: '#C5A059',
                         borderWidth: 1,
-                        borderRadius: 5,
+                        borderRadius: 4,
                         yAxisID: 'yQtd',
                         datalabels: { align: 'center', anchor: 'center', color: '#FFFFFF', formatter: (v) => v.toLocaleString('pt-BR') }
                     }
@@ -567,12 +571,12 @@
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                layout: { padding: { top: 40, bottom: 10 } },
-                plugins: { legend: { position: 'top', align: 'end' } },
+                layout: { padding: { top: 25, bottom: 5 } },
+                plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 10 } } } },
                 scales: {
                     yPerc: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
                     yQtd:  { grid: { display: false }, border: { display: false }, ticks: { display: false } },
-                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600', size: 10 } } }
                 }
             }
         });
@@ -580,10 +584,10 @@
         // RENDERIZADOR DA TABELA (HEATMAP COM BORDAS)
         function buildDailyTable(elementId, dataset) {
             const table = document.getElementById(elementId);
-            let html = `<thead><tr><th style="text-align:left; padding-left:0.8rem;">CANAL</th><th>Meta Dia</th>`;
+            let html = `<thead><tr><th style="text-align:left; padding-left:0.5rem;">CANAL</th><th>Meta Dia</th>`;
             DIARIO_DATA.dias.forEach(d => {
                 const isDom = d.s === 'Dom';
-                html += `<th class="${isDom ? 'cell-weekend-hdr' : ''}">${d.d}<br><span style="font-size:0.75rem">${d.s}</span></th>`;
+                html += `<th class="${isDom ? 'cell-weekend-hdr' : ''}">${d.d}<br><span style="font-size:0.65rem">${d.s}</span></th>`;
             });
             html += `</tr></thead><tbody>`;
 
@@ -650,6 +654,11 @@
         setInterval(updateClock, 1000); updateClock();
 
         startProgressBar(); setInterval(nextPanelAuto, LOOP_TIME);
+
+        // AUTO-REFRESH PARA ATUALIZAR OS DADOS NA TV (30 min)
+        setTimeout(function() {
+            window.location.reload(true);
+        }, 1800000);
     </script>
 </body>
 </html>
