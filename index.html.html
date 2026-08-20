@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTP | Executive TV Dashboard - Regional SP</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js + ChartJS DataLabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+    <style>
+        :root {
+            --bg-dark: #001229;
+            --bg-card: rgba(0, 26, 61, 0.75);
+            --gold-premium: #C5A059;
+            --gold-light: rgba(197, 160, 89, 0.4);
+            --gold-glow: rgba(197, 160, 89, 0.3);
+            --gold-strong: #FFC107; 
+            --cyan-neon: #00FFCC;
+            --cyan-glow: rgba(0, 255, 204, 0.25);
+            --blue-accent: #007BFF;
+            --purple-accent: #8b5cf6;
+            --text-main: #FFFFFF;
+            --text-muted: #94A3B8;
+            
+            /* Status */
+            --success-bg: rgba(40, 167, 69, 0.25);
+            --success-text: #00FFCC;
+            --danger-bg: rgba(220, 53, 69, 0.25);
+            --danger-text: #FF5D6C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 80% 10%, rgba(0, 40, 95, 0.6), var(--bg-dark) 70%);
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            border-bottom: 2px solid var(--gold-premium);
+            background: linear-gradient(90deg, rgba(0,18,41,0.95) 0%, rgba(0,26,61,0.95) 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            z-index: 20;
+        }
+
+        .brand-area { display: flex; align-items: center; gap: 15px; }
+        .brand-badge {
+            background: linear-gradient(135deg, var(--gold-premium), #9A7B3E);
+            color: #000; font-weight: 900; padding: 6px 12px; border-radius: 6px; font-size: 1.1rem; letter-spacing: 1px;
+        }
+        .brand-title { font-size: 1.8rem; font-weight: 800; letter-spacing: 0.5px; }
+        .brand-title span { color: var(--gold-premium); }
+
+        .nav-tabs {
+            display: flex; gap: 10px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+        }
+        .tab-btn {
+            background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+        }
+        .tab-btn.active {
+            background: var(--gold-premium); color: #001229; box-shadow: 0 0 12px var(--gold-glow); font-weight: 800;
+        }
+
+        .clock-container { text-align: right; }
+        .clock-time { font-size: 2rem; font-weight: 800; color: var(--cyan-neon); line-height: 1; text-shadow: 0 0 10px var(--cyan-glow); }
+        .clock-date { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+        /* MAIN DASHBOARD AREA */
+        .dashboard-body { flex: 1; position: relative; padding: 1.5rem 2.5rem; }
+        .panel {
+            position: absolute; top: 1.5rem; left: 2.5rem; right: 2.5rem; bottom: 1.5rem; opacity: 0; transform: translateY(15px) scale(0.99); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; display: flex; flex-direction: column; gap: 1.2rem;
+        }
+        .panel.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; z-index: 10; }
+
+        /* CARDS & CONTAINERS */
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; }
+        .kpi-card {
+            background: var(--bg-card); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: space-between; backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); position: relative; overflow: hidden;
+        }
+        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold-premium); }
+        .kpi-card.cyan-accent::before { background: var(--cyan-neon); }
+        .kpi-card.danger-accent::before { background: var(--danger-text); }
+        .kpi-label { font-size: 0.95rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        
+        .kpi-val { font-size: 2.4rem; font-weight: 900; color: var(--text-main); margin-top: 0.3rem; display: flex; align-items: baseline; gap: 8px;}
+        .kpi-val.gold { color: var(--gold-premium); }
+        .kpi-val.cyan { color: var(--cyan-neon); }
+        .kpi-val.green { color: #4ade80; }
+        .kpi-val.red { color: var(--danger-text); }
+        
+        /* Ajuste de Tamanhos e Cores para Tendência e M-1 */
+        .kpi-val .tendency-val { font-size: 2.2rem; color: var(--gold-premium); }
+        .kpi-val .m1-val { font-size: 2.2rem; color: #4ade80; }
+        .kpi-val .divider { color: rgba(255,255,255,0.2); font-weight: 300; font-size: 2.2rem; margin: 0 4px; }
+
+        .kpi-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* CHARTS LAYOUT */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; flex: 1; }
+        .full-chart-container {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; flex: 1; position: relative;
+        }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .chart-title { font-size: 1.25rem; color: var(--gold-premium); font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .chart-wrapper { flex: 1; position: relative; width: 100%; min-height: 0; }
+
+        /* PAINEL DIÁRIO OPTIMIZATIONS */
+        .daily-top-bar { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+        .efficiency-balloon {
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.15), rgba(0, 26, 61, 0.9)); border: 2px solid var(--cyan-neon); border-radius: 50px; padding: 0.8rem 1.8rem; display: flex; align-items: center; gap: 15px; box-shadow: 0 0 25px var(--cyan-glow); animation: pulseGlow 3s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
+            100% { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+        }
+        .efficiency-balloon .icon-box { background: var(--cyan-neon); color: #001229; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .efficiency-balloon .eff-text { display: flex; flex-direction: column; }
+        .efficiency-balloon .eff-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; font-weight: 700; }
+        .efficiency-balloon .eff-value { font-size: 2.2rem; font-weight: 900; color: var(--cyan-neon); line-height: 1; }
+
+        .table-card {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem 1.2rem; flex: 1; display: flex; flex-direction: column; overflow: hidden;
+        }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .data-table th, .data-table td { border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0.4rem; text-align: center; }
+        .data-table th { background: rgba(0, 0, 0, 0.6); color: var(--gold-premium); font-weight: 700; font-size: 0.9rem; }
+        .data-table td.channel-name { text-align: left; font-weight: 700; padding-left: 0.8rem; background: rgba(0, 0, 0, 0.3); color: var(--text-main); }
+        .data-table td.meta-col { background: rgba(197, 160, 89, 0.15); color: var(--gold-premium); font-weight: 800; }
+
+        /* Heatmap classes */
+        .cell-weekend-hdr { background: rgba(220, 53, 69, 0.8) !important; color: white !important; }
+        .cell-weekend { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); }
+        .cell-good { background: var(--success-bg); color: var(--success-text); font-weight: 800; }
+        .cell-bad { background: var(--danger-bg); color: var(--danger-text); font-weight: 700; }
+
+        /* DESTAQUES DE LINHA (CONTORNO COMPLETO) */
+        .data-table tr.highlight-regional td { border-top: 2px solid var(--gold-premium) !important; border-bottom: 2px solid var(--gold-premium) !important; }
+        .data-table tr.highlight-regional td:first-child { border-left: 2px solid var(--gold-premium) !important; color: var(--gold-premium); font-size: 1.05rem; }
+        .data-table tr.highlight-regional td:last-child { border-right: 2px solid var(--gold-premium) !important; }
+
+        .data-table tr.highlight-presencial td { border-top: 2px solid #60A5FA !important; border-bottom: 2px solid #60A5FA !important; }
+        .data-table tr.highlight-presencial td:first-child { border-left: 2px solid #60A5FA !important; color: #60A5FA; }
+        .data-table tr.highlight-presencial td:last-child { border-right: 2px solid #60A5FA !important; }
+
+        .data-table tr.highlight-remoto td { border-top: 2px solid var(--cyan-neon) !important; border-bottom: 2px solid var(--cyan-neon) !important; }
+        .data-table tr.highlight-remoto td:first-child { border-left: 2px solid var(--cyan-neon) !important; color: var(--cyan-neon); }
+        .data-table tr.highlight-remoto td:last-child { border-right: 2px solid var(--cyan-neon) !important; }
+
+        /* PROGRESS BAR FOR AUTO LOOP */
+        .progress-bar-container { position: fixed; bottom: 0; left: 0; right: 0; height: 5px; background: rgba(0,0,0,0.5); z-index: 100; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold-premium), var(--cyan-neon)); width: 0%; transition: width linear; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER EXECUTIVE -->
+    <header>
+        <div class="brand-area">
+            <div class="brand-badge">BTP</div>
+            <div class="brand-title">REGIONAL SP <span>| Cockpit TV</span></div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchPanel(1)"><i class="fa-solid fa-chart-line"></i> Vendas & Altas vs. Meta</button>
+            <button class="tab-btn" onclick="switchPanel(2)"><i class="fa-solid fa-calendar-day"></i> Acompanhamento Diário</button>
+            <button class="tab-btn" onclick="switchPanel(3)"><i class="fa-solid fa-network-wired"></i> Net Adds Histórico</button>
+            <button class="tab-btn" onclick="switchPanel(4)"><i class="fa-solid fa-user-minus"></i> Churn Histórico</button>
+        </div>
+
+        <div class="clock-container">
+            <div class="clock-time" id="clock-time">00:00:00</div>
+            <div class="clock-date" id="clock-date">SÃO PAULO - BR</div>
+        </div>
+    </header>
+
+    <div class="dashboard-body">
+
+        <!-- ========================================== -->
+        <!-- PAINEL 1: VENDAS E ALTAS VS. META HISTÓRICO -->
+        <!-- ========================================== -->
+        <div class="panel active" id="panel-1">
+            <div class="kpi-row">
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-bullseye"></i> Vendas Ago/26 (Proj) vs. Meta</div>
+                    <div class="kpi-val cyan">2.155 <span style="font-size: 1.4rem; color: #4ade80;">(+10,7%)</span></div>
+                    <div class="kpi-sub">Meta do Mês: 1.946 propostas</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-bolt"></i> Altas Ago/26 (Proj) vs. Meta</div>
+                    <div class="kpi-val gold">1.765 <span style="font-size: 1.4rem; color: #4ade80;">(+5,4%)</span></div>
+                    <div class="kpi-sub">Meta do Mês: 1.674 instalações</div>
+                </div>
+                <div class="kpi-card cyan-accent">
+                    <div class="kpi-label"><i class="fa-solid fa-arrow-trend-up"></i> Tendência Recente</div>
+                    <div class="kpi-val green" style="font-size: 2.4rem;">5 Meses</div>
+                    <div class="kpi-sub">Consecutivos acima da meta (Abr-Ago/26)</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="full-chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title"><i class="fa-solid fa-cart-shopping"></i> Vendas: Realizado (Linha) vs. Meta (Barra)</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="chartVendasMeta"></canvas>
+                    </div>
+                </div>
+
+                <div class="full-chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title"><i class="fa-solid fa-truck-ramp-box"></i> Altas: Realizado (Linha) vs. Meta (Barra)</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="chartAltasMeta"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAINEL 2: ACOMPANHAMENTO DIÁRIO            -->
+        <!-- ========================================== -->
+        <div class="panel" id="panel-2">
+            <div class="daily-top-bar">
+                <div class="kpi-row" style="flex:1;">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Meta Altas Ago</div>
+                        <div class="kpi-val gold" id="kpi-meta-ago" style="font-size: 2.4rem;">1.674</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Forecast Ago</div>
+                        <div class="kpi-val" style="font-size: 2.4rem;">1.910</div>
+                    </div>
+                    <div class="kpi-card cyan-accent">
+                        <div class="kpi-label">Realizado / Tendência</div>
+                        <div class="kpi-val cyan">
+                            1.014 <span class="divider">|</span> <span class="tendency-val">1.765</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card danger-accent">
+                        <div class="kpi-label">% Atng. FC / Cresc M-1</div>
+                        <div class="kpi-val red">
+                            92,4% <span class="divider">|</span> <span class="m1-val">+3,5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="efficiency-balloon">
+                    <div class="icon-box"><i class="fa-solid fa-gauge-high"></i></div>
+                    <div class="eff-text">
+                        <span class="eff-title">Eficiência Acumulada</span>
+                        <span class="eff-value" id="eff-val-badge">81,9%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="chart-header" style="margin-bottom:0.4rem;">
+                    <div class="chart-title" style="font-size:1.1rem;"><i class="fa-solid fa-cart-plus"></i> Vendas Diárias por Canal (Agosto)</div>
+                </div>
+                <table class="data-table" id="tableVendasDiaria"></table>
+            </div>
+
+            <div class="table-card">
+                <div class="chart-header" style="margin-bottom:0.4rem;">
+                    <div class="chart-title" style="font-size:1.1rem;"><i class="fa-solid fa-plug-circle-check"></i> Altas Diárias por Canal (Agosto)</div>
+                </div>
+                <table class="data-table" id="tableAltasDiaria"></table>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAINEL 3: NET ADDS HISTÓRICO              -->
+        <!-- ========================================== -->
+        <div class="panel" id="panel-3">
+            <div class="kpi-row">
+                <div class="kpi-card cyan-accent">
+                    <div class="kpi-label"><i class="fa-solid fa-plus-minus"></i> Net Add Projetado (Ago/26)</div>
+                    <div class="kpi-val cyan" style="font-size: 2.4rem;">+ 697</div>
+                    <div class="kpi-sub">Crescimento líquido positivo acelerado</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-trophy"></i> Melhor Desempenho</div>
+                    <div class="kpi-val green" style="font-size: 2.4rem;">+ 697 <span style="font-size:1.2rem; color:var(--text-muted); font-weight: 600;">(Ago/26)</span></div>
+                    <div class="kpi-sub">Recorde do período analisado</div>
+                </div>
+                <div class="kpi-card danger-accent">
+                    <div class="kpi-label"><i class="fa-solid fa-triangle-exclamation"></i> Menor Ponto</div>
+                    <div class="kpi-val red" style="font-size: 2.4rem;">- 1.017 <span style="font-size:1.2rem; color:var(--text-muted); font-weight: 600;">(Abr/26)</span></div>
+                    <div class="kpi-sub">Reversão total nos meses seguintes</div>
+                </div>
+            </div>
+
+            <div class="full-chart-container">
+                <div class="chart-header">
+                    <div class="chart-title"><i class="fa-solid fa-chart-column"></i> Evolução Histórica de Net Adds (Base Total)</div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="chartNetAddsSolo"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAINEL 4: CHURN HISTÓRICO                 -->
+        <!-- ========================================== -->
+        <div class="panel" id="panel-4">
+            <div class="kpi-row">
+                <div class="kpi-card cyan-accent">
+                    <div class="kpi-label"><i class="fa-solid fa-percent"></i> Taxa de Churn (Jul/26)</div>
+                    <div class="kpi-val green" style="font-size: 2.4rem;">1,76%</div>
+                    <div class="kpi-sub">Menor índice histórico alcançado!</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-users-slash"></i> Churn Total Qtd (Jul/26)</div>
+                    <div class="kpi-val gold" style="font-size: 2.4rem;">1.068</div>
+                    <div class="kpi-sub">Queda contínua desde Abr/26 (2.391)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-calculator"></i> Média do Período</div>
+                    <div class="kpi-val" style="font-size: 2.4rem;">2,43%</div>
+                    <div class="kpi-sub">Redução expressiva na retenção</div>
+                </div>
+            </div>
+
+            <div class="full-chart-container">
+                <div class="chart-header">
+                    <div class="chart-title"><i class="fa-solid fa-arrow-trend-down"></i> Evolução do Churn: Taxa (%) vs Volume Absoluto</div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="chartChurnSolo"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BARRA DE PROGRESSO DO LOOP AUTOMÁTICO -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // BANCO DE DADOS CENTRALIZADO
+        // =========================================================================
+        const HISTORICO_DATA = {
+            meses: ['Ago/25', 'Set/25', 'Out/25', 'Nov/25', 'Dez/25', 'Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', 'Ago/26'],
+            vendas: {
+                meta: [2229, 2291, 2362, 2113, 1728, 1563, 1563, 1797, 1418, 1420, 1435, 1842, 1946],
+                real: [1422, 1327, 1497, 1448, 1272, 1532, 1485, 1572, 1647, 1622, 1696, 2047, 2155]
+            },
+            altas: {
+                meta: [2006, 2060, 2125, 1903, 1555, 1407, 1407, 1617, 1277, 1279, 1291, 1584, 1674],
+                real: [1293, 1145, 1288, 1197, 1053, 1185, 1221, 1336, 1374, 1407, 1350, 1709, 1765]
+            },
+            netAdds: [-458, -570, -395, -388, -384, 89, -696, -212, -1017, -80, 228, 641, 697],
+            churn: {
+                qtd: [1751, 1715, 1683, 1585, 1437, 1096, 1917, 1548, 2391, 1487, 1122, 1068, 1068],
+                perc: [2.76, 2.73, 2.70, 2.56, 2.33, 1.78, 3.15, 2.57, 3.99, 2.49, 1.87, 1.76, 1.76]
+            }
+        };
+
+        const DIARIO_DATA = {
+            dias: [
+                { d: 1, s: 'Sáb' }, { d: 2, s: 'Dom' }, { d: 3, s: 'Seg' }, { d: 4, s: 'Ter' }, 
+                { d: 5, s: 'Qua' }, { d: 6, s: 'Qui' }, { d: 7, s: 'Sex' }, { d: 8, s: 'Sáb' }, 
+                { d: 9, s: 'Dom' }, { d: 10, s: 'Seg' }, { d: 11, s: 'Ter' }, { d: 12, s: 'Qua' },
+                { d: 13, s: 'Qui' }, { d: 14, s: 'Sex' }, { d: 15, s: 'Sáb' }, { d: 16, s: 'Dom' },
+                { d: 17, s: 'Seg' }, { d: 18, s: 'Ter' }
+            ],
+            vendas: [
+                { canal: 'REGIONAL SP', meta: 101, valores: [0,0,148,96,105,62,86,33,0,99,90,92,85,97,32,0,104,109], highlight: 'regional' },
+                { canal: 'Presenciais', meta: 35, valores: [0,0,54,37,42,25,37,20,0,34,28,32,40,46,15,0,42,46], highlight: 'presencial' },
+                { canal: 'Remotos', meta: 66, valores: [0,0,94,59,63,37,49,13,0,65,62,60,45,51,17,0,62,63], highlight: 'remoto' },
+                { canal: 'Inside Sales', meta: 66, valores: [0,0,89,47,54,29,33,11,0,63,44,46,37,40,15,0,55,60], highlight: '' },
+                { canal: 'Digital', meta: 0, valores: [0,0,5,12,9,8,16,2,0,2,18,14,8,11,2,0,7,3], highlight: '' },
+                { canal: 'Lojas', meta: 21, valores: [0,0,16,7,13,9,18,4,0,15,12,8,9,20,4,0,14,8], highlight: '' },
+                { canal: 'PaP Próprio', meta: 5, valores: [0,0,9,12,10,8,8,4,0,5,10,10,9,8,3,0,11,14], highlight: '' },
+                { canal: 'AA', meta: 8, valores: [0,0,29,18,19,8,11,12,0,14,6,14,22,18,8,0,17,24], highlight: '' }
+            ],
+            altas: [
+                { canal: 'REGIONAL SP', meta: 90, valores: [44,2,56,84,79,76,64,45,1,61,82,80,64,72,49,0,71,84], highlight: 'regional' },
+                { canal: 'Presenciais', meta: 28, valores: [26,1,28,34,24,36,22,15,1,28,35,28,21,40,21,0,39,30], highlight: 'presencial' },
+                { canal: 'Remotos', meta: 62, valores: [18,1,28,50,55,40,42,30,0,33,47,52,43,32,28,0,32,54], highlight: 'remoto' },
+                { canal: 'Inside Sales', meta: 60, valores: [12,1,27,45,47,36,30,24,0,30,45,40,35,29,25,0,28,46], highlight: '' },
+                { canal: 'Digital', meta: 2, valores: [6,0,1,5,8,4,12,6,0,3,2,12,8,3,3,0,4,8], highlight: '' },
+                { canal: 'Lojas', meta: 17, valores: [15,0,4,10,11,9,7,6,1,10,10,11,3,19,6,0,16,7], highlight: '' },
+                { canal: 'PaP Próprio', meta: 5, valores: [5,1,6,6,4,13,5,3,0,3,12,6,5,12,2,0,9,7], highlight: '' },
+                { canal: 'AA', meta: 6, valores: [6,0,18,18,9,14,10,6,0,15,13,11,13,9,13,0,14,16], highlight: '' }
+            ]
+        };
+
+        // =========================================================================
+        // CONFIGURAÇÕES DE GRÁFICOS (Chart.js + Datalabels)
+        // =========================================================================
+        Chart.register(ChartDataLabels);
+        Chart.defaults.color = '#A0B0C0';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.plugins.datalabels.font = { weight: 'bold', size: 12 };
+
+        // 1. GRÁFICO VENDAS
+        new Chart(document.getElementById('chartVendasMeta'), {
+            data: {
+                labels: HISTORICO_DATA.meses,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Meta Vendas',
+                        data: HISTORICO_DATA.vendas.meta,
+                        backgroundColor: (ctx) => ctx.dataIndex === ctx.chart.data.labels.length - 1 ? '#FFC107' : 'rgba(0, 123, 255, 0.5)',
+                        borderColor: (ctx) => ctx.dataIndex === ctx.chart.data.labels.length - 1 ? '#FFC107' : '#007BFF',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        datalabels: { align: 'start', anchor: 'end', color: '#FFFFFF', formatter: (v) => v.toLocaleString('pt-BR') }
+                    },
+                    {
+                        type: 'line',
+                        label: 'Realizado/Proj Vendas',
+                        data: HISTORICO_DATA.vendas.real,
+                        borderColor: '#00FFCC',
+                        borderWidth: 4,
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#001229',
+                        pointBorderColor: '#00FFCC',
+                        pointBorderWidth: 2,
+                        datalabels: { align: 'end', anchor: 'end', color: '#00FFCC', font: { size: 13, weight: '900' }, formatter: (v) => v.toLocaleString('pt-BR') }
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                layout: { padding: { top: 40, bottom: 10 } },
+                plugins: { legend: { position: 'top', align: 'end' } },
+                scales: { 
+                    y: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                }
+            }
+        });
+
+        // 2. GRÁFICO ALTAS
+        new Chart(document.getElementById('chartAltasMeta'), {
+            data: {
+                labels: HISTORICO_DATA.meses,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Meta Altas',
+                        data: HISTORICO_DATA.altas.meta,
+                        backgroundColor: (ctx) => ctx.dataIndex === ctx.chart.data.labels.length - 1 ? '#FFC107' : 'rgba(139, 92, 246, 0.5)',
+                        borderColor: (ctx) => ctx.dataIndex === ctx.chart.data.labels.length - 1 ? '#FFC107' : '#8b5cf6',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        datalabels: { align: 'start', anchor: 'end', color: '#FFFFFF', formatter: (v) => v.toLocaleString('pt-BR') }
+                    },
+                    {
+                        type: 'line',
+                        label: 'Realizado/Proj Altas',
+                        data: HISTORICO_DATA.altas.real,
+                        borderColor: '#C5A059',
+                        borderWidth: 4,
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#001229',
+                        pointBorderColor: '#C5A059',
+                        pointBorderWidth: 2,
+                        datalabels: { align: 'end', anchor: 'end', color: '#C5A059', font: { size: 13, weight: '900' }, formatter: (v) => v.toLocaleString('pt-BR') }
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                layout: { padding: { top: 40, bottom: 10 } },
+                plugins: { legend: { position: 'top', align: 'end' } },
+                scales: { 
+                    y: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                }
+            }
+        });
+
+        // 3. GRÁFICO NET ADDS
+        new Chart(document.getElementById('chartNetAddsSolo'), {
+            type: 'bar',
+            data: {
+                labels: HISTORICO_DATA.meses,
+                datasets: [{
+                    label: 'Net Adds',
+                    data: HISTORICO_DATA.netAdds,
+                    backgroundColor: (ctx) => ctx.raw >= 0 ? 'rgba(0, 255, 204, 0.75)' : 'rgba(220, 53, 69, 0.75)',
+                    borderColor: (ctx) => ctx.raw >= 0 ? '#00FFCC' : '#DC3545',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    datalabels: {
+                        anchor: (ctx) => ctx.raw >= 0 ? 'end' : 'start',
+                        align: (ctx) => ctx.raw >= 0 ? 'top' : 'bottom',
+                        color: (ctx) => ctx.raw >= 0 ? '#00FFCC' : '#FF5D6C',
+                        formatter: (v) => (v > 0 ? '+' : '') + v.toLocaleString('pt-BR')
+                    }
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                layout: { padding: { top: 40, bottom: 40 } },
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                }
+            }
+        });
+
+        // 4. GRÁFICO CHURN
+        new Chart(document.getElementById('chartChurnSolo'), {
+            data: {
+                labels: HISTORICO_DATA.meses,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Taxa de Churn (%)',
+                        data: HISTORICO_DATA.churn.perc,
+                        borderColor: '#FF5D6C',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#001229',
+                        pointBorderColor: '#FF5D6C',
+                        pointBorderWidth: 2,
+                        yAxisID: 'yPerc',
+                        datalabels: { align: 'top', anchor: 'end', color: '#FF5D6C', formatter: (v) => v.toFixed(2) + '%' }
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Volume Churn (Qtd)',
+                        data: HISTORICO_DATA.churn.qtd,
+                        backgroundColor: 'rgba(197, 160, 89, 0.4)',
+                        borderColor: '#C5A059',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        yAxisID: 'yQtd',
+                        datalabels: { align: 'center', anchor: 'center', color: '#FFFFFF', formatter: (v) => v.toLocaleString('pt-BR') }
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                layout: { padding: { top: 40, bottom: 10 } },
+                plugins: { legend: { position: 'top', align: 'end' } },
+                scales: {
+                    yPerc: { grid: { display: false }, border: { display: false }, ticks: { display: false } },
+                    yQtd:  { grid: { display: false }, border: { display: false }, ticks: { display: false } },
+                    x: { grid: { display: false }, border: { display: true, color: 'rgba(255,255,255,0.2)' }, ticks: { color: '#94A3B8', font: { weight: '600' } } }
+                }
+            }
+        });
+
+        // RENDERIZADOR DA TABELA (HEATMAP COM BORDAS)
+        function buildDailyTable(elementId, dataset) {
+            const table = document.getElementById(elementId);
+            let html = `<thead><tr><th style="text-align:left; padding-left:0.8rem;">CANAL</th><th>Meta Dia</th>`;
+            DIARIO_DATA.dias.forEach(d => {
+                const isDom = d.s === 'Dom';
+                html += `<th class="${isDom ? 'cell-weekend-hdr' : ''}">${d.d}<br><span style="font-size:0.75rem">${d.s}</span></th>`;
+            });
+            html += `</tr></thead><tbody>`;
+
+            dataset.forEach(row => {
+                let rowClass = '';
+                if (row.highlight === 'regional') rowClass = 'highlight-regional';
+                else if (row.highlight === 'presencial') rowClass = 'highlight-presencial';
+                else if (row.highlight === 'remoto') rowClass = 'highlight-remoto';
+
+                html += `<tr class="${rowClass}">
+                    <td class="channel-name">${row.canal}</td>
+                    <td class="meta-col">${row.meta}</td>`;
+
+                row.valores.forEach((val, idx) => {
+                    const isWeekend = DIARIO_DATA.dias[idx].s === 'Sáb' || DIARIO_DATA.dias[idx].s === 'Dom';
+                    let cellClass = '';
+                    if (val >= row.meta && row.meta > 0) cellClass = 'cell-good';
+                    else if (val < row.meta && row.meta > 0) cellClass = isWeekend && val === 0 ? 'cell-weekend' : 'cell-bad';
+                    else if (row.meta === 0 && val > 0) cellClass = 'cell-good';
+                    else cellClass = isWeekend ? 'cell-weekend' : '';
+
+                    html += `<td class="${cellClass}">${val}</td>`;
+                });
+                html += `</tr>`;
+            });
+            html += `</tbody>`;
+            table.innerHTML = html;
+        }
+
+        buildDailyTable('tableVendasDiaria', DIARIO_DATA.vendas);
+        buildDailyTable('tableAltasDiaria', DIARIO_DATA.altas);
+
+        // AUTOMAÇÃO E ROTATÓRIO DO MODO TV
+        const LOOP_TIME = 15000;
+        let currentPanel = 1;
+        const totalPanels = 4;
+        const progressBar = document.getElementById('progressBar');
+
+        function startProgressBar() {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.transition = `width ${LOOP_TIME}ms linear`;
+                progressBar.style.width = '100%';
+            }, 50);
+        }
+
+        function switchPanel(panelIndex) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            currentPanel = panelIndex;
+            document.getElementById(`panel-${currentPanel}`).classList.add('active');
+            document.querySelectorAll('.tab-btn')[currentPanel - 1].classList.add('active');
+            startProgressBar();
+        }
+
+        function nextPanelAuto() { switchPanel(currentPanel === totalPanels ? 1 : currentPanel + 1); }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock-time').textContent = now.toLocaleTimeString('pt-BR', { hour12: false });
+            document.getElementById('clock-date').textContent = now.toLocaleDateString('pt-BR', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase();
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        startProgressBar(); setInterval(nextPanelAuto, LOOP_TIME);
+    </script>
+</body>
+</html>
