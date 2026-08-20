@@ -301,13 +301,13 @@
         <div class="panel" id="panel-3">
             <div class="kpi-row">
                 <div class="kpi-card cyan-accent">
-                    <div class="kpi-label"><i class="fa-solid fa-plus-minus"></i> Net Add Projetado (Ago/26)</div>
-                    <div class="kpi-val cyan">+ 697</div>
+                    <div class="kpi-label"><i class="fa-solid fa-plus-minus"></i> Net Add último mês (Jul/26)</div>
+                    <div class="kpi-val cyan">+ 641</div>
                     <div class="kpi-sub">Crescimento líquido positivo acelerado</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-label"><i class="fa-solid fa-trophy"></i> Melhor Desempenho</div>
-                    <div class="kpi-val green">+ 697 <span style="font-size:0.9rem; color:var(--text-muted); font-weight: 600;">(Ago/26)</span></div>
+                    <div class="kpi-val green">+ 641 <span style="font-size:0.9rem; color:var(--text-muted); font-weight: 600;">(Jul/26)</span></div>
                     <div class="kpi-sub">Recorde do período analisado</div>
                 </div>
                 <div class="kpi-card danger-accent">
@@ -515,14 +515,14 @@
                 datasets: [{
                     label: 'Net Adds',
                     data: HISTORICO_DATA.netAdds,
-                    backgroundColor: (ctx) => ctx.raw >= 0 ? 'rgba(0, 255, 204, 0.75)' : 'rgba(220, 53, 69, 0.75)',
-                    borderColor: (ctx) => ctx.raw >= 0 ? '#00FFCC' : '#DC3545',
+                    backgroundColor: (ctx) => ctx.raw >= 0 ? 'rgba(74, 222, 128, 0.6)' : 'rgba(220, 53, 69, 0.75)',
+                    borderColor: (ctx) => ctx.raw >= 0 ? '#4ade80' : '#DC3545',
                     borderWidth: 1.5,
                     borderRadius: 4,
                     datalabels: {
-                        anchor: (ctx) => ctx.raw >= 0 ? 'end' : 'start',
-                        align: (ctx) => ctx.raw >= 0 ? 'top' : 'bottom',
-                        color: (ctx) => ctx.raw >= 0 ? '#00FFCC' : '#FF5D6C',
+                        anchor: (ctx) => ctx.dataset.data[ctx.dataIndex] >= 0 ? 'end' : 'start',
+                        align: (ctx) => ctx.dataset.data[ctx.dataIndex] >= 0 ? 'top' : 'bottom',
+                        color: (ctx) => ctx.dataset.data[ctx.dataIndex] >= 0 ? '#4ade80' : '#FF5D6C',
                         formatter: (v) => (v > 0 ? '+' : '') + v.toLocaleString('pt-BR')
                     }
                 }]
@@ -621,7 +621,7 @@
         buildDailyTable('tableAltasDiaria', DIARIO_DATA.altas);
 
         // AUTOMAÇÃO E ROTATÓRIO DO MODO TV
-        const LOOP_TIME = 25000;
+        const LOOP_TIME = 15000;
         let currentPanel = 1;
         const totalPanels = 4;
         const progressBar = document.getElementById('progressBar');
